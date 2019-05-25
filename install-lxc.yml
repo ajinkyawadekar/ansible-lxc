@@ -1,0 +1,28 @@
+---
+- hosts: localhost
+  tasks:
+    - name: Create a bridge network
+      copy:
+        src: files/interfaces
+        dest: /etc/network/
+        mode: 0664
+
+    - name: Install LXC files
+      apt: name={{ item }} state=present update_cache=yes
+      with_items:
+        - lxc
+        - lxc-templates
+        - wget
+        - bridge-utils
+
+    - name: Disabling default bridge lxcbr0
+      lineinfile:
+        path: /etc/default/lxc-net
+        regexp: '^USE_LXC_BRIDGE='
+        line: USE_LXC_BRIDGE="false"
+
+    - name: Change the default LXC bridge to br0
+      lineinfile:
+        path: /etc/lxc/default.conf
+        regexp: '^lxc.network.link='
+        line: lxc.network.link=br0

@@ -1,0 +1,26 @@
+source /etc/network/interfaces.d/*
+
+# The loopback network interface
+auto lo
+iface lo inet loopback
+
+# The primary network interface
+auto ens33
+iface ens33 inet dhcp
+
+##Bridge  Name ###
+auto br0
+
+### Bridge Information
+iface br0 inet static
+bridge_ports ens33
+bridge_stp off
+bridge_fd 9
+
+### Bridge IP ###
+#address 10.0.0.10
+#netmask 255.255.255.0
+#network 10.0.0.0
+#broadcast 10.0.0.255
+#gateway 10.0.0.1
+#dns-nameservers 8.8.8.8
