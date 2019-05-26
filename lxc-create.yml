@@ -1,0 +1,13 @@
+---
+    - name: Create a started container
+      lxc_container:
+        name: "{{ item }}"
+        container_log: true
+        template: centos
+        state: started
+      with_items:
+        - lb1
+        - lb2
+        - web1
+        - web2
+
