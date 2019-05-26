@@ -1,1 +1,5 @@
 [containers]
+lb1 ansible_connection=lxc
+lb2 ansible_connection=lxc
+web1 ansible_connection=lxc
+web2 ansible_connection=lxc

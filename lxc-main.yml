@@ -29,9 +29,4 @@
         regexp: '^lxc.network.link='
         line: lxc.network.link=br0
 
-    - name: Create a started container
-      lxc_container:
-        name: centos_lxc
-        container_log: true
-        template: centos
-        state: started
+    - include_tasks: lxc-create.yml
