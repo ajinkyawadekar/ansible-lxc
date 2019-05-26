@@ -15,6 +15,7 @@
         - wget
         - bridge-utils
         - yum
+        - python-lxc
 
     - name: Disabling default bridge lxcbr0
       lineinfile:
@@ -27,3 +28,10 @@
         path: /etc/lxc/default.conf
         regexp: '^lxc.network.link='
         line: lxc.network.link=br0
+
+    - name: Create a started container
+      lxc_container:
+        name: centos_lxc
+        container_log: true
+        template: centos
+        state: started
