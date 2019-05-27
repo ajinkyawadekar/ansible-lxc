@@ -30,3 +30,6 @@
         line: lxc.network.link=br0
 
     - include_tasks: lxc-create.yml
+    - include_tasks: webserver-install.yml
+      tags:
+        - webserver
