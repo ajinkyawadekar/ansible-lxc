@@ -1,0 +1,12 @@
+---
+    - name: Install webserver on the web group
+      lxc_container:
+        name: "{{ item }}"
+        template: centos
+        container_command: |
+          yum install -y httpd
+          yum install -y mod_ssl
+          /usr/sbin/apachectl start
+          iptables -I INPUT 1 -p tcp --dport 80 -j ACCEPT
+      with_items: "{{ groups['web'] }}"
+
