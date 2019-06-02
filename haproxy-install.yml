@@ -1,0 +1,10 @@
+---
+    - name: Install webserver on the web group
+      lxc_container:
+        name: "{{ item }}"
+        template: centos
+        container_command: |
+          yum install -y haproxy
+          /etc/init.d/haproxy start
+      with_items: "{{ groups['lb'] }}"
+

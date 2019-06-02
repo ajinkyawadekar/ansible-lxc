@@ -30,4 +30,5 @@
         line: lxc.network.link=br0
 
     - include_tasks: lxc-create.yml
-    - include_tasks: web.yml
+    - include_tasks: webserver-install.yml
+    - include_tasks: haproxy-install.yml
