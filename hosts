@@ -3,7 +3,7 @@ lb
 web
 
 [lb]
-lb1 ansible_connection=lxc
+lb1 ansible_connection=lxc 
 lb2 ansible_connection=lxc
 
 [web]

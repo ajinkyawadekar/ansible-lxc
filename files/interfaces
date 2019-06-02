@@ -14,9 +14,9 @@ bridge_stp off
 bridge_fd 9
 
 ### Bridge IP ###
-#address 10.0.0.10
+#address 192.168.13.130
 #netmask 255.255.255.0
-#network 10.0.0.0
-#broadcast 10.0.0.255
-#gateway 10.0.0.1
+#network 192.168.13.0
+#broadcast 192.168.13.255
+#gateway 192.168.13.2
 #dns-nameservers 8.8.8.8

@@ -1,11 +1,13 @@
 ---
 - hosts: localhost
+  gather_facts: no
   tasks:
     - name: Create a bridge network
       copy:
         src: files/interfaces
         dest: /etc/network/
         mode: 0664
+#      delegate_to: localhost
 
     - name: Install LXC files
       apt: name={{ item }} state=present update_cache=yes
@@ -16,20 +18,24 @@
         - bridge-utils
         - yum
         - python-lxc
+#      delegate_to: localhost
 
     - name: Disabling default bridge lxcbr0
       lineinfile:
         path: /etc/default/lxc-net
         regexp: '^USE_LXC_BRIDGE='
         line: USE_LXC_BRIDGE="false"
+#      delegate_to: localhost
 
     - name: Change the default LXC bridge to br0
       lineinfile:
         path: /etc/lxc/default.conf
         regexp: '^lxc.network.link='
         line: lxc.network.link=br0
+#      delegate_to: localhost
 
-    - include_tasks: lxc-create.yml
-    - include_tasks: webserver-install.yml
-      tags:
-        - webserver
+    - name: Run the playbooks to create and install webservers
+      include_tasks: "{{ item }}"
+      with_items:
+        - lxc-create.yml
+        - webserver-install.yml

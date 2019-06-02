@@ -1,20 +1,18 @@
 ---
+  - hosts: "{{ web }}"
     - name: Install webserver
-      delegate_to: web
-      lxc_container:
-      container_command: |
-        yum update
-        yum install httpd mod_ssl      
+      service: name={{ item }} state=started enabled=yes
+      with_items:
+        - httpd
+        - mod_ssl
 
     - name: Start services
       service: name={{ item }} state=started enabled=yes
       with_items:
         - httpd
-      delegate_to: web
 
     - name: Open port 80 for http access
       shell: iptables -I INPUT 1 -p tcp --dport 80 -j ACCEPT
-      delegate_to: web
 
 #    - name: Restart the iptables
 #      shell: service iptables restart
@@ -24,4 +22,3 @@
         src: files/index.html
         dest: /var/www/html/index.html
         mode: 0664
-      delegate_to: web
