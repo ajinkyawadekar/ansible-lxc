@@ -3,12 +3,20 @@
   tasks:
     - name: Create a bridge network
       copy:
-        src: files/interfaces
-        dest: /etc/network/
+        src: files/ifcfg-virbr0
+        dest: /etc/sysconfig/network-scripts/
         mode: 0664
 
+    - name: Check if the bridging module is loaded
+      command: modinfo bridge
+      register: load_value
+
+    - name: Load the module if its not already loaded
+      command: modprobe --first-time bridge
+      when: load_value.rc == 1
+
     - name: Install LXC files
-      apt: name={{ item }} state=present update_cache=yes
+      yum: name={{ item }} state=present update_cache=yes
       with_items:
         - lxc
         - lxc-templates
@@ -17,17 +25,17 @@
         - yum
         - python-lxc
 
-    - name: Disabling default bridge lxcbr0
-      lineinfile:
-        path: /etc/default/lxc-net
-        regexp: '^USE_LXC_BRIDGE='
-        line: USE_LXC_BRIDGE="false"
+#    - name: Disabling default bridge lxcbr0
+#      lineinfile:
+#        path: /etc/default/lxc-net
+#        regexp: '^USE_LXC_BRIDGE='
+#        line: USE_LXC_BRIDGE="false"
 
-    - name: Change the default LXC bridge to br0
-      lineinfile:
-        path: /etc/lxc/default.conf
-        regexp: '^lxc.network.link='
-        line: lxc.network.link=br0
+#    - name: Change the default LXC bridge to br0
+#      lineinfile:
+#        path: /etc/lxc/default.conf
+#        regexp: '^lxc.network.link='
+#        line: lxc.network.link=br0
 
-    - include_tasks: lxc-create.yml
-    - include_tasks: web.yml
+#    - include_tasks: lxc-create.yml
+#    - include_tasks: web.yml
