@@ -15,15 +15,33 @@
       command: modprobe --first-time bridge
       when: load_value.rc == 1
 
-    - name: Install LXC files
-      yum: name={{ item }} state=present update_cache=yes
-      with_items:
-        - lxc
-        - lxc-templates
-        - wget
-        - bridge-utils
-        - yum
-        - python-lxc
+#    - name: Install LXC files
+#      yum: name={{ item }} state=present update_cache=yes
+#      with_items:
+#        - lxc
+#        - lxc-templates
+#        - libcap-devel
+#        - libcgroup
+#        - wget
+#        - bridge-utils
+#        - yum
+#        - python-lxc
+
+    - name: Check the interface name
+      shell: "nmcli |head -1 |cut -d: -f1"
+      register: interface_name
+
+    - name: Add network bridge info to above interface
+      lineinfile:
+        path: /etc/sysconfig/network-scripts/ifcfg-{{ interface_name.stdout }}
+        line: BRIDGE=virbr0
+
+    - name: Restart network
+      service:
+        name: network
+        state: restarted
+      
+
 
 #    - name: Disabling default bridge lxcbr0
 #      lineinfile:
